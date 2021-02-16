@@ -14,6 +14,10 @@ kubectl::apply() {
     kubectl::do apply "$@"
 }
 
+kubectl::patch() {
+    kubectl::do patch "$@"
+}
+
 kubectl::delete() {
     kubectl::do delete "$@"
 }
@@ -39,6 +43,7 @@ waitForHttpResponse() {
 }
 
 kubectl::apply -f examples/operator/operator.yaml
+kubectl::patch deployment contour-operator --type='json' -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": {"contour-image": projectcontour/contour:main}}]'
 kubectl::apply -f examples/contour/contour.yaml
 kubectl::apply -f https://projectcontour.io/examples/kuard.yaml
 waitForHttpResponse http://local.projectcontour.io 1 100

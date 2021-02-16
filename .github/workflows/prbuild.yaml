@@ -36,6 +36,21 @@ jobs:
       - name: test-example
         run: |
           make local-cluster load-image example test-example
+  test-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.15.8'
+      - name: deps
+        run: |
+          ./hack/actions/install-kubernetes-toolchain.sh $GITHUB_WORKSPACE/bin
+          echo "$GITHUB_WORKSPACE/bin" >> $GITHUB_PATH
+          echo "/usr/local/kubebuilder/bin" >> $GITHUB_PATH
+      - name: integration
+        run: |
+          make local-cluster load-image example test-example
   test-e2e-linux:
     runs-on: ubuntu-latest
     steps:
